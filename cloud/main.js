@@ -105,10 +105,9 @@ AV.Cloud.define("removeUserRelation", function(request, response){
     var fromUser = request.params.fromUser;
     var toUser = request.params.toUser;
     var type = request.params.type;
-    var bkName = request.params.bkName;
 
     //移除用户关系
-    removeUserRelation(fromUser,toUser,type,bkName,function (success,error){
+    removeUserRelation(fromUser,toUser,type,function (success,error){
 
         if (success)
         {
