@@ -1,5 +1,8 @@
 require("cloud/app.js");
 
+AV._initialize('zw8sz05w7m6ojd9xm5vnhrm0mzgkmqpe0kud43dmf0wl6tez', 'm8xc1qb4onqx5p8532lqo8l4hetuv7zxdwslxlmma3xl30y9', 'tq5a5ysc68etxemu5x3vhzv5zy3df4uv8qzwjmsmmp2hvued');
+AV.Cloud.useMasterKey();
+
 AV.Cloud.define("hello", function(request, response) {
 
     var userQ = new AV.Query(User);
@@ -175,6 +178,7 @@ function removeUserRelation(fromUser,toUser,type,done){
 
 function addUserRelationIfIsNotExist(fromUser,toUser,type,bkName,done){
 
+
     var userRelationQ = new AV.Query(UserRelation);
     userRelationQ.equalTo('fromUser',fromUser);
     userRelationQ.equalTo('toUser',toUser);
@@ -189,6 +193,7 @@ function addUserRelationIfIsNotExist(fromUser,toUser,type,bkName,done){
             else
             {
                //没有关注
+                console.log("没有关注");
                 var userRelation = new UserRelation();
                 userRelation.set('fromUser',fromUser);
                 userRelation.set('toUser',toUser);
