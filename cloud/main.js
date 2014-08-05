@@ -69,8 +69,7 @@ AV.Cloud.define("addUserRelation", function(request, response){
 
     var fromUser = request.params.fromUser;
     var toUser = request.params.toUser;
-//    var fromUser = AV.Object.createWithoutData("_User",fromUserId);
-//    var toUser = AV.Object.createWithoutData("_User",toUserId);
+
     var type = request.params.type;
     var bkName = request.params.bkName;
 
@@ -199,6 +198,7 @@ function addUserRelationIfIsNotExist(fromUser,toUser,type,bkName,done){
             {
                //已经关注
                 done(false,"已经关注");
+                console.log("已经关注");
             }
             else
             {
