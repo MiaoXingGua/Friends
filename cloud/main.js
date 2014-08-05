@@ -73,8 +73,8 @@ AV.Cloud.define("addUserRelation", function(request, response){
     var type = request.params.type;
     var bkName = request.params.bkName;
 
-    console.dir(fromUser);
-    console.dir(toUser);
+//    console.dir(fromUser);
+//    console.dir(toUser);
 
     //添加用户关系
     addUserRelationIfIsNotExist(fromUser,toUser,type,bkName,function (success,error){
@@ -107,8 +107,8 @@ AV.Cloud.define("removeUserRelation", function(request, response){
     var type = request.params.type;
     var bkName = request.params.bkName;
 
-    //添加用户关系
-    addUserRelationIfIsNotExist(fromUser,toUser,type,bkName,function (success,error){
+    //移除用户关系
+    removeUserRelation(fromUser,toUser,type,bkName,function (success,error){
 
         if (success)
         {
