@@ -55,7 +55,7 @@ var ALUserRelationTypeOfFollow = 1;
 
 function _saveAll(list,done)
 {
-    AV.Object.saveAll([object1, object2], function(list, error) {
+    AV.Object.saveAll(list, function(list, error) {
         done(list,error);
     });
 }
