@@ -185,14 +185,10 @@ function removeUserRelation(fromUser,toUser,type,done){
 
 function addUserRelationIfIsNotExist(fromUser,toUser,type,bkName,done){
 
-    console.dir(fromUser);
-    console.dir(toUser);
 
-    var fromUser = AV.Object.createWithoutData("_User",fromUser.id);
-    var toUser = AV.Object.createWithoutData("_User",toUser.id);
+    var fromUser = AV.Object.createWithoutData("_User",fromUser.objectId);
+    var toUser = AV.Object.createWithoutData("_User",toUser.objectId);
 
-    console.dir(fromUser);
-    console.dir(toUser);
 
     var userRelationQ = new AV.Query(UserRelation);
     userRelationQ.equalTo('fromUser',fromUser);
