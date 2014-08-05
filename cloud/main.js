@@ -148,7 +148,7 @@ function removeUserRelation(fromUser,toUser,type,done){
                 console.log("已经关注");
                 object.destroy({
                     success: function(object) {
-                        // The object was deleted from the AVOS Cloud.
+                        console.log("删除成功");
                         done(true,null);
 //                        fromUser.increment('numberOfFriends',-1);
 //                        toUser.increment('numberOfFollows',-1);
@@ -167,6 +167,7 @@ function removeUserRelation(fromUser,toUser,type,done){
 //                        });
                     },
                     error: function(object, error) {
+                        console.log("删除失败"+error.message);
                         done(false,error.message);
                     }
                 });
