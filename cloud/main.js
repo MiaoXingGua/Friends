@@ -67,8 +67,10 @@ function _isEmpty(obj)
 
 AV.Cloud.define("addUserRelation", function(request, response){
 
-    var fromUser = request.fromUser;
-    var toUser = request.toUser;
+    var fromUserId = request.fromUserId;
+    var toUserId = request.toUserId;
+    var fromUser = AV.Object.createWithoutData("_User",fromUserId);
+    var toUser = AV.Object.createWithoutData("_User",toUserId);
     var type = request.type;
     var bkName = request.bkName;
 
