@@ -72,6 +72,9 @@ AV.Cloud.define("addUserRelation", function(request, response){
     var type = request.type;
     var bkName = request.bkName;
 
+    console.dir(fromUser);
+    console.dir(toUser);
+
     //添加用户关系
     addUserRelationIfIsNotExist(fromUser,toUser,type,bkName,function (success,error){
 
@@ -129,6 +132,9 @@ AV.Cloud.define("removeUserRelation", function(request, response){
 
 function removeUserRelation(fromUser,toUser,type,done){
 
+    var fromUser = AV.Object.createWithoutData("_User",fromUser.id);
+    var toUser = AV.Object.createWithoutData("_User",toUser.id);
+
     var userRelationQ = new AV.Query(UserRelation);
     userRelationQ.equalTo('fromUser',fromUser);
     userRelationQ.equalTo('toUser',toUser);
@@ -178,6 +184,8 @@ function removeUserRelation(fromUser,toUser,type,done){
 
 function addUserRelationIfIsNotExist(fromUser,toUser,type,bkName,done){
 
+    var fromUser = AV.Object.createWithoutData("_User",fromUser.id);
+    var toUser = AV.Object.createWithoutData("_User",toUser.id);
 
     var userRelationQ = new AV.Query(UserRelation);
     userRelationQ.equalTo('fromUser',fromUser);
