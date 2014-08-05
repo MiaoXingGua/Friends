@@ -133,8 +133,8 @@ AV.Cloud.define("removeUserRelation", function(request, response){
 
 function removeUserRelation(fromUser,toUser,type,done){
 
-    var fromUser = AV.Object.createWithoutData("_User",fromUser.id);
-    var toUser = AV.Object.createWithoutData("_User",toUser.id);
+    var fromUser = AV.Object.createWithoutData("_User",fromUser.objectId);
+    var toUser = AV.Object.createWithoutData("_User",toUser.objectId);
 
     var userRelationQ = new AV.Query(UserRelation);
     userRelationQ.equalTo('fromUser',fromUser);
@@ -145,23 +145,26 @@ function removeUserRelation(fromUser,toUser,type,done){
             if (object)
             {
                 //已经关注
+                console.log("已经关注");
                 object.destroy({
                     success: function(object) {
                         // The object was deleted from the AVOS Cloud.
-                        fromUser.increment('numberOfFriends',-1);
-                        toUser.increment('numberOfFollows',-1);
-                        _saveAll([fromUser,toUser],function(list, error) {
-                            if (!error)
-                            {
-                                done(true,null)
-                            }
-                            else
-                            {
-                                //回滚
-                                object.save();
-                                done(false,error.message);
-                            }
-                        });
+                        done(true,null);
+//                        fromUser.increment('numberOfFriends',-1);
+//                        toUser.increment('numberOfFollows',-1);
+//                        _saveAll([fromUser,toUser],function(list, error) {
+//                            if (!error)
+//                            {
+//                                console.log("保存成功");
+//                                done(true,null);
+//                            }
+//                            else
+//                            {
+//                                //回滚
+//                                object.save();
+//                                done(false,error.message);
+//                            }
+//                        });
                     },
                     error: function(object, error) {
                         done(false,error.message);
@@ -172,6 +175,7 @@ function removeUserRelation(fromUser,toUser,type,done){
             {
                 done(false,"没有关注");
                 //没有关注
+                console.log("没有关注");
             }
         },
         error: function(error) {
@@ -213,22 +217,23 @@ function addUserRelationIfIsNotExist(fromUser,toUser,type,bkName,done){
                 userRelation.set('bkName',bkName);
                 userRelation.save().then(function(object) {
 
-                        fromUser.increment('numberOfFriends');
-                        toUser.increment('numberOfFollows');
-                        _saveAll([fromUser,toUser],function(list, error) {
-                            if (!error)
-                            {
-                                console.log("保存成功");
-                                done(true,null)
-                            }
-                            else
-                            {
-                                //回滚
-                                console.log("保存失败");
-                                object.destroy();
-                                done(false,error.message);
-                            }
-                        });
+                    done(true,null)
+//                        fromUser.increment('numberOfFriends');
+//                        toUser.increment('numberOfFollows');
+//                        _saveAll([fromUser,toUser],function(list, error) {
+//                            if (!error)
+//                            {
+//                                console.log("保存成功");
+//                                done(true,null)
+//                            }
+//                            else
+//                            {
+//                                //回滚
+//                                console.log("保存失败");
+//                                object.destroy();
+//                                done(false,error.message);
+//                            }
+//                        });
 
                     }, function(error) {
 
@@ -255,8 +260,8 @@ function checkIsBothFollow(user1, user2, type, tryTimes, done){
     var user1 =  AV.Object.createWithoutData("_User",user1.objectId);
     var user2 = AV.Object.createWithoutData("_User",user2.objectId);
 
-    console.dir(user1);
-    console.dir(user2);
+//    console.dir(user1);
+//    console.dir(user2);
 
     var userRelationQ = new AV.Query(UserRelation);
     userRelationQ.equalTo('fromUser',user1);
@@ -276,8 +281,8 @@ function checkIsBothFollow(user1, user2, type, tryTimes, done){
                         if (object2)//已经粉丝
                         {
                             console.log("互粉:已经粉丝");
-                            user1.increment('numberOfBilaterals');
-                            user2.increment('numberOfBilaterals');
+//                            user1.increment('numberOfBilaterals');
+//                            user2.increment('numberOfBilaterals');
                             object1.set('isBothFollow',true);
                             object2.set('isBothFollow',true);
 
