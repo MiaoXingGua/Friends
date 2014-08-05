@@ -55,8 +55,8 @@ var ALUserRelationTypeOfFollow = 1;
 
 function _saveAll(list,done)
 {
-    AV.Object.saveAll(list, function(list, error) {
-        done(list,error);
+    AV.Object.saveAll(list, function(list1, error) {
+        done(list1,error);
     });
 }
 
@@ -218,11 +218,13 @@ function addUserRelationIfIsNotExist(fromUser,toUser,type,bkName,done){
                         _saveAll([fromUser,toUser],function(list, error) {
                             if (!error)
                             {
+                                console.log("保存成功");
                                 done(true,null)
                             }
                             else
                             {
                                 //回滚
+                                console.log("保存失败");
                                 object.destroy();
                                 done(false,error.message);
                             }
