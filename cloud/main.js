@@ -136,6 +136,9 @@ function removeUserRelation(fromUser,toUser,type,done){
     var fromUser = AV.Object.createWithoutData("_User",fromUser.objectId);
     var toUser = AV.Object.createWithoutData("_User",toUser.objectId);
 
+    console.dir(fromUser);
+    console.dir(toUser);
+
     var userRelationQ = new AV.Query(UserRelation);
     userRelationQ.equalTo('fromUser',fromUser);
     userRelationQ.equalTo('toUser',toUser);
