@@ -261,8 +261,8 @@ function checkIsBothFollow(user1, user2, type, tryTimes, done){
     var user1 =  AV.Object.createWithoutData("_User",user1.objectId);
     var user2 = AV.Object.createWithoutData("_User",user2.objectId);
 
-//    console.dir(user1);
-//    console.dir(user2);
+    console.dir(user1);
+    console.dir(user2);
 
     var userRelationQ = new AV.Query(UserRelation);
     userRelationQ.equalTo('fromUser',user1);
