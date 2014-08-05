@@ -102,10 +102,10 @@ AV.Cloud.define("addUserRelation", function(request, response){
 
 AV.Cloud.define("removeUserRelation", function(request, response){
 
-    var fromUser = request.fromUser;
-    var toUser = request.toUser;
-    var type = request.type;
-    var bkName = request.bkName;
+    var fromUser = request.params.fromUser;
+    var toUser = request.params.toUser;
+    var type = request.params.type;
+    var bkName = request.params.bkName;
 
     //添加用户关系
     addUserRelationIfIsNotExist(fromUser,toUser,type,bkName,function (success,error){
@@ -235,6 +235,7 @@ function addUserRelationIfIsNotExist(fromUser,toUser,type,bkName,done){
         error: function(error) {
             //查询失败
 //            alert("Error: " + error.code + " " + error.message);
+            console.log("Error: " + error.code + " " + error.message);
             done(false,error.message);
         }
     });
