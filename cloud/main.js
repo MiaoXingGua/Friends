@@ -252,8 +252,11 @@ function checkIsBothFollow(user1, user2, type, tryTimes, done){
         done(false,"次数超过限制");
     }
 
-    var user1 =  AV.Object.createWithoutData("_User",user1.id);
-    var user2 = AV.Object.createWithoutData("_User",user2.id);
+    var user1 =  AV.Object.createWithoutData("_User",user1.objectId);
+    var user2 = AV.Object.createWithoutData("_User",user2.objectId);
+
+    console.dir(user1);
+    console.dir(user2);
 
     var userRelationQ = new AV.Query(UserRelation);
     userRelationQ.equalTo('fromUser',user1);
@@ -263,6 +266,7 @@ function checkIsBothFollow(user1, user2, type, tryTimes, done){
         success: function(object1) {
             if (object1) //已经关注
             {
+                console.log("互粉:已经关注");
                 var userRelationQ = new AV.Query(UserRelation);
                 userRelationQ.equalTo('fromUser',user2);
                 userRelationQ.equalTo('toUser',user1);
@@ -271,6 +275,7 @@ function checkIsBothFollow(user1, user2, type, tryTimes, done){
                     success: function(object2) {
                         if (object2)//已经粉丝
                         {
+                            console.log("互粉:已经粉丝");
                             user1.increment('numberOfBilaterals');
                             user2.increment('numberOfBilaterals');
                             object1.set('isBothFollow',true);
@@ -291,6 +296,7 @@ function checkIsBothFollow(user1, user2, type, tryTimes, done){
                         else
                         {
                             //没有粉丝
+                            console.log("互粉:不是粉丝");
                             done(true,null);
                         }
 
@@ -304,6 +310,7 @@ function checkIsBothFollow(user1, user2, type, tryTimes, done){
             else
             {
                 //没有关注
+                console.log("互粉:不是关注");
                 done(true,null);
             }
         },
