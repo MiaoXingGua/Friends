@@ -70,7 +70,7 @@ AV.Cloud.define("addUserRelation", function(request, response){
     var bkName = request.bkName;
 
     //添加用户关系
-    addUserRelationIfIsNotExistFromUser(fromUser,toUser,type,bkName,function (success,error){
+    addUserRelationIfIsNotExist(fromUser,toUser,type,bkName,function (success,error){
 
         if (success)
         {
