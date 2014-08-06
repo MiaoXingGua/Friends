@@ -47,6 +47,11 @@ var WeatherType = AV.Object.extend('WeatherType');
 
 var Notification = AV.Object.extend('_Notification');
 
+var GiftCount = AV.Object.extend('GiftCount');
+var GiftWorth = AV.Object.extend('GiftWorth');
+var GiftRecorder = AV.Object.extend('GiftRecorder');
+var Gift = AV.Object.extend('Gift');
+
 var AirQualityIndex = AV.Object.extend('AirQualityIndex');
 
 var PM25AppKey = "siv7h7ydxAEBoQw5Z3Lj";
@@ -63,6 +68,123 @@ function _saveAll(list,done)
 function _isEmpty(obj)
 {
     return Object.keys(obj).length === 0;
+}
+
+
+AV.Cloud.afterSave("GiftRecorder", function(request) {
+
+    var giftRecorder = request.object;
+    var gift = AV.Object.createWithoutData('Gift',giftRecorder.get('gift').objectId);
+    var fromUser = AV.Object.createWithoutData('_User',giftRecorder.get('fromUser').objectId);
+    var toUser = AV.Object.createWithoutData('_User',giftRecorder.get('toUser').objectId);
+    var number = giftRecorder.get('number');
+    var totalWorth = giftRecorder.get('totalWorth');
+
+    incrementGiftCount(gift,toUser,number,10,null);
+    incrementGiftWorth(fromUser,toUser,totalWorth,10,null);
+});
+
+function incrementGiftCount(gift,toUser,number,tryTimes,done)
+{
+    if (tryTimes<=0)
+    {
+        done();
+        return;
+    }
+
+    var giftCountQ = new AV.Query(UserRelation);
+    giftCountQ.equalTo('gift',gift);
+    giftCountQ.equalTo('toUser',toUser);
+    giftCountQ.first({
+        success: function(giftCount) {
+            if (giftCount)
+            {
+                //已经存在
+                console.log("已经存在");
+                giftCount.increment('number',number);
+
+                giftCount.save();
+            }
+            else
+            {
+                //不存在
+                console.log("不存在");
+                var giftCount = new GiftCount();
+                giftCount.set('gift',gift);
+                giftCount.set('toUser',toUser);
+                giftCount.set('number',number);
+
+                giftCount.save().then(function(object) {
+
+                        done();
+
+                    }, function(error) {
+
+                        console.log("Error: " + error.code + " " + error.message);
+                        incrementGiftCount(gift,toUser,number,--tryTimes,done);
+
+                    });
+            }
+        },
+        error: function(error) {
+            //查询失败
+//            alert("Error: " + error.code + " " + error.message);
+            console.log("Error: " + error.code + " " + error.message);
+            incrementGiftCount(gift,toUser,number,--tryTimes,done);
+
+        }
+    });
+}
+
+function incrementGiftWorth(fromUser,toUser,totalWorth,tryTimes,done)
+{
+    if (tryTimes<=0)
+    {
+        done();
+        return;
+    }
+
+    var giftWorthQ = new AV.Query(UserRelation);
+    giftWorthQ.equalTo('fromUser',fromUser);
+    giftWorthQ.equalTo('toUser',toUser);
+    giftWorthQ.first({
+        success: function(giftWorth) {
+            if (giftWorth)
+            {
+                //已经存在
+                console.log("已经存在");
+                giftWorth.increment('totalWorth',totalWorth);
+                giftWorth.save();
+            }
+            else
+            {
+                //不存在
+                console.log("不存在");
+                var giftWorth = new GiftWorth();
+                giftWorth.set('fromUser',fromUser);
+                giftWorth.set('toUser',toUser);
+                giftWorth.set('totalWorth',totalWorth);
+
+                giftWorth.save().then(function(object) {
+
+                    done();
+
+                }, function(error) {
+
+                    console.log("Error: " + error.code + " " + error.message);
+                    incrementGiftCount(fromUser,toUser,totalWorth,--tryTimes,done);
+
+                });
+            }
+        },
+        error: function(error) {
+            //查询失败
+//            alert("Error: " + error.code + " " + error.message);
+            console.log("Error: " + error.code + " " + error.message);
+            incrementGiftCount(fromUser,toUser,totalWorth,--tryTimes,done);
+
+        }
+    });
 }
 
 AV.Cloud.define("addUserRelation", function(request, response){
@@ -206,8 +328,25 @@ function addUserRelationIfIsNotExist(fromUser,toUser,type,bkName,done){
             if (object)
             {
                //已经关注
-                done(false,"已经关注");
                 console.log("已经关注");
+
+                if (object.get('type') == type)
+                {
+                    done(false,"已经关注");
+                }
+                else
+                {
+                    //类别不同 修改类别
+                    object.set('type',type);
+                    object.save().then(function(object) {
+
+                        done(true,null);
+
+                    }, function(error) {
+
+                        done(false,error.message);
+                    });
+                }
             }
             else
             {
@@ -220,23 +359,7 @@ function addUserRelationIfIsNotExist(fromUser,toUser,type,bkName,done){
                 userRelation.set('bkName',bkName);
                 userRelation.save().then(function(object) {
 
-                    done(true,null)
-//                        fromUser.increment('numberOfFriends');
-//                        toUser.increment('numberOfFollows');
-//                        _saveAll([fromUser,toUser],function(list, error) {
-//                            if (!error)
-//                            {
-//                                console.log("保存成功");
-//                                done(true,null)
-//                            }
-//                            else
-//                            {
-//                                //回滚
-//                                console.log("保存失败");
-//                                object.destroy();
-//                                done(false,error.message);
-//                            }
-//                        });
+                    done(true,null);
 
                     }, function(error) {
 
